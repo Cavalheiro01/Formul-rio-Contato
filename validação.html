@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Prático - UC10 Senac</title>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style>
+        /* Requisito: Layout organizado, centralizado e responsivo */
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background-color: #f4f7f9; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+        .contato-container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 90%; 
+            max-width: 400px; 
+        }
+        h2 { color: #004a8d; text-align: center; margin-bottom: 20px; }
+        
+        /* Estilização dos Campos e Alinhamento */
+        .campo-grupo { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-size: 14px;
+        }
+        textarea { height: 100px; resize: none; }
+        
+        /* Botão Estilizado */
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #004a8d; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        button:hover { background-color: #003366; }
+        button:disabled { background-color: #aaa; cursor: not-allowed; }
+
+        /* Mensagens de Feedback via DOM */
+        #feedback { 
+            margin-top: 20px; 
+            padding: 10px; 
+            border-radius: 5px; 
+            text-align: center; 
+            display: none; 
+            font-weight: bold;
+        }
+        .msg-sucesso { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .msg-erro { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="contato-container">
+    <h2>Fale Conosco</h2>
+    
+    <form id="form-contato">
+        <div class="campo-grupo">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
+        </div>
+
+        <div class="campo-grupo">
+            <label for="email">E-mail:</label>
+            <input type="text" id="email" name="email" placeholder="seu@email.com">
+        </div>
+
+        <div class="campo-grupo">
+            <label for="tema">Tema:</label>
+            <select id="tema" name="tema">
+                <option value="">Selecione um tema...</option>
+                <option value="Sugestão">Sugestão</option>
+                <option value="Reclamação">Reclamação</option>
+                <option value="Dúvida">Dúvida</option>
+                <option value="Elogio">Elogio</option>
+                <option value="Outros">Outros</option>
+            </select>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" placeholder="Sua mensagem aqui..."></textarea>
+        </div>
+
+        <button type="submit" id="btn-enviar">Enviar Mensagem</button>
+    </form>
+    
+    <div id="feedback"></div>
+</div>
+
+<script>
+    // 1. Inicialização com sua Public Key (Pegar na aba Account)
+    emailjs.init("8vS1lEBUXnr-5VUWY");
+
+    // Captura de elementos via DOM
+    const form = document.getElementById('form-contato');
+    const feedbackMsg = document.getElementById('feedback');
+    const btnSubmit = document.getElementById('btn-enviar');
+
+    // 2. Requisito: addEventListener e Evento submit
+    form.addEventListener('submit', function(event) {
+        
+        // 3. Requisito: preventDefault() para bloquear o envio padrão
+        event.preventDefault();
+
+        // 4. Requisito: Captura de dados via DOM
+        const nome = document.getElementById('nome').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const tema = document.getElementById('tema').value;
+        const mensagem = document.getElementById('mensagem').value.trim();
+
+        // 5. Requisito: Validação dos dados (JavaScript)
+        if (nome === "" || email === "" || tema === "" || mensagem === "") {
+            exibirResposta("Erro: Todos os campos são obrigatórios!", "msg-erro");
+            return;
+        }
+
+        // Validação básica de formato de e-mail
+        if (!email.includes("@") || !email.includes(".")) {
+            exibirResposta("Erro: Digite um e-mail válido!", "msg-erro");
+            return;
+        }
+
+        // Estado de carregamento
+        btnSubmit.innerText = "Enviando...";
+        btnSubmit.disabled = true;
+        feedbackMsg.style.display = "none";
+
+        // 6. Requisito: Integração com EmailJS (Service ID e Template ID confirmados)
+        const serviceID = 'service_7z31mt9'; // Seu Service ID do Outlook
+        const templateID = 'template_xdzh10w'; // Seu Template ID criado
+
+        emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+                // 7. Requisito: Exibir mensagem de sucesso após envio
+                exibirResposta("✅ Sucesso! Mensagem enviada para o Outlook.", "msg-sucesso");
+                form.reset(); 
+            }, (error) => {
+                exibirResposta("❌ Erro ao enviar. Tente novamente.", "msg-erro");
+                console.log("Falha:", error);
+            })
+            .finally(() => {
+                btnSubmit.innerText = "Enviar Mensagem";
+                btnSubmit.disabled = false;
+            });
+    });
+
+    // Função de Manipulação do DOM para feedback ao usuário
+    function exibirResposta(texto, classe) {
+        feedbackMsg.innerText = texto;
+        feedbackMsg.className = classe; 
+        feedbackMsg.style.display = "block";
+    }
+</script>
+
+</body>
+</html>

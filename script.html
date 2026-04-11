@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>JS</title>
+    <style>
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 25px 0;
+        }
+
+        
+        section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        
+        #ligar { background-color: #27ae60; }
+        #ligar:hover { background-color: #219150; }
+
+        #desligar { background-color: #e74c3c; }
+        #desligar:hover { background-color: #c0392b; }
+
+        
+        p {
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+
+        #status {
+            border-left-color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Explorando o Console do Explorador</h1>
+    <hr>
+
+    <section>
+        <h2>1. Desafio de Cliques (Mensagens Variáveis)</h2>
+        <button id="btnMensagem">Clique para mudar a frase</button>
+        <p id="txtMensagem">Aguardando primeiro clique...</p>
+    </section>
+
+    <section>
+        <h2>2. Sistema de Controle (Ligar/Desligar)</h2>
+        <button id="ligar">Ligar</button>
+        <button id="desligar">Desligar</button>
+        <p id="status">O sistema está em espera.</p>
+    </section>
+
+    <script>
+        
+        console.log("--- Iniciando Teste de Votação ---");
+        let idade = Number(prompt("Digite sua idade para verificar o título:"));
+        
+        if (idade < 16) {
+            alert("Não pode votar");
+            console.log("Resultado: Não pode votar");
+        } else if (idade >= 16 && idade < 18) {
+            alert("Voto opcional");
+            console.log("Resultado: Voto opcional");
+        } else {
+            alert("Voto obrigatório");
+            console.log("Resultado: Voto obrigatório");
+        }
+
+        
+        let numTabuada = parseInt(prompt("Digite um número para ver a tabuada no console:"));
+        console.log("Tabuada do " + numTabuada + ":");
+        for (let i = 1; i <= 10; i++) {
+            console.log(numTabuada + " x " + i + " = " + (numTabuada * i));
+        }
+
+        
+        let qtd = 0;
+        let numDigitado;
+        while (true) {
+            numDigitado = parseInt(prompt("Contador: Digite um número (0 para encerrar):"));
+            if (numDigitado === 0) break;
+            qtd++;
+        }
+        alert("Total de números digitados (exceto o zero): " + qtd);
+
+        
+        function calcularMedia(n1, n2) {
+            let media = (n1 + n2) / 2;
+            let situacao;
+            if (media >= 7) situacao = "Aprovado";
+            else if (media >= 5) situacao = "Recuperação";
+            else situacao = "Reprovado";
+            
+            alert("Média: " + media + "\nSituação: " + situacao);
+        }
+        calcularMedia(7.5, 6.0);
+
+        
+        let btnMsg = document.getElementById("btnMensagem");
+        let txtMsg = document.getElementById("txtMensagem");
+        let contadorCliques = 0;
+
+        btnMsg.addEventListener("click", function() {
+            contadorCliques++;
+            if (contadorCliques === 1) txtMsg.textContent = "Olá!";
+            else if (contadorCliques === 2) txtMsg.textContent = "Tudo bem?";
+            else if (contadorCliques === 3) txtMsg.textContent = "Você gostaria de saber qual é meu time favorito?";
+            else txtMsg.textContent = "Palmeiras é o melhor time do Brasil!";
+        });
+
+        
+        let btnLigar = document.getElementById("ligar");
+        let btnDesligar = document.getElementById("desligar");
+        let statusDisplay = document.getElementById("status");
+
+        btnLigar.addEventListener("click", function() {
+            statusDisplay.textContent = "Sistema ligado!";
+            statusDisplay.style.borderLeftColor = "#27ae60"; 
+        });
+
+        btnDesligar.addEventListener("click", function() {
+            statusDisplay.textContent = "Sistema desligado!";
+            statusDisplay.style.borderLeftColor = "#e74c3c"; 
+        });
+    </script>
+</body>
+</html>

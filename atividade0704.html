@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+    <meta charset="UTF-8">
+    <title>Atividade 07/04</title>
+    </head>
+    <body>
+        <ul class="lista-compras">
+            <li class="item">Arroz</li>
+            <li class="item">Feijão</li>
+            <li class="item">Macarrão</li>
+        </ul>
+        <button id="btn-destacar">Destacar Itens</button>
+
+        <script>
+            const botaoDestacar = document.querySelector('#btn-destacar');
+            const itens = document.querySelectorAll('.item');
+
+            botaoDestacar.addEventListener('click', () => {
+                itens.forEach((item, index) => {
+                    item.style.backgroundColor = 'yellow';
+                    item.textContent = `Item ${index + 1} destacado`;
+                });
+            });
+        </script>
+    </body>
