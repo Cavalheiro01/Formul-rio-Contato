@@ -11,7 +11,7 @@
         /* Requisito: Layout organizado, centralizado e responsivo */
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background-color: #f4f7f9; 
+            background: radial-gradient(circle, rgb(255, 255, 255), rgb(0, 51, 102)); 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -72,20 +72,26 @@
 </head>
 <body>
 
+<!-- Container principal -->
 <div class="contato-container">
-    <h2>Fale Conosco</h2>
+    <h2>Fale Conosco</h2> <!-- Título do formulário -->
     
+    <!-- Formulário -->
     <form id="form-contato">
+
+        <!-- Campo Nome -->
         <div class="campo-grupo">
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
         </div>
 
+        <!-- Campo Email -->
         <div class="campo-grupo">
             <label for="email">E-mail:</label>
             <input type="text" id="email" name="email" placeholder="seu@email.com">
         </div>
 
+        <!-- Campo Tema -->
         <div class="campo-grupo">
             <label for="tema">Tema:</label>
             <select id="tema" name="tema">
@@ -98,79 +104,84 @@
             </select>
         </div>
 
+        <!-- Campo Mensagem -->
         <div class="campo-grupo">
             <label for="mensagem">Mensagem:</label>
             <textarea id="mensagem" name="mensagem" placeholder="Sua mensagem aqui..."></textarea>
         </div>
 
+        <!-- Botão de envio -->
         <button type="submit" id="btn-enviar">Enviar Mensagem</button>
     </form>
     
+    <!-- Área de feedback -->
     <div id="feedback"></div>
 </div>
 
 <script>
-    // 1. Inicialização com sua Public Key (Pegar na aba Account)
+    // Inicializa o EmailJS com sua chave pública
     emailjs.init("8vS1lEBUXnr-5VUWY");
 
-    // Captura de elementos via DOM
-    const form = document.getElementById('form-contato');
-    const feedbackMsg = document.getElementById('feedback');
-    const btnSubmit = document.getElementById('btn-enviar');
+    // Captura os elementos do DOM
+    const form = document.getElementById('form-contato'); // Formulário
+    const feedbackMsg = document.getElementById('feedback'); // Caixa de feedback
+    const btnSubmit = document.getElementById('btn-enviar'); // Botão
 
-    // 2. Requisito: addEventListener e Evento submit
+    // Adiciona evento de envio ao formulário
     form.addEventListener('submit', function(event) {
         
-        // 3. Requisito: preventDefault() para bloquear o envio padrão
-        event.preventDefault();
+        event.preventDefault(); // Impede o envio padrão da página (recarregar)
 
-        // 4. Requisito: Captura de dados via DOM
+        // Captura os valores digitados
         const nome = document.getElementById('nome').value.trim();
         const email = document.getElementById('email').value.trim();
         const tema = document.getElementById('tema').value;
         const mensagem = document.getElementById('mensagem').value.trim();
 
-        // 5. Requisito: Validação dos dados (JavaScript)
+        // Validação: verifica se algum campo está vazio
         if (nome === "" || email === "" || tema === "" || mensagem === "") {
             exibirResposta("Erro: Todos os campos são obrigatórios!", "msg-erro");
-            return;
+            return; // Para a execução
         }
 
-        // Validação básica de formato de e-mail
+        // Validação simples de e-mail
         if (!email.includes("@") || !email.includes(".")) {
             exibirResposta("Erro: Digite um e-mail válido!", "msg-erro");
             return;
         }
 
         // Estado de carregamento
-        btnSubmit.innerText = "Enviando...";
-        btnSubmit.disabled = true;
-        feedbackMsg.style.display = "none";
+        btnSubmit.innerText = "Enviando..."; // Altera texto do botão
+        btnSubmit.disabled = true; // Desativa botão
+        feedbackMsg.style.display = "none"; // Esconde feedback
 
-        // 6. Requisito: Integração com EmailJS (Service ID e Template ID confirmados)
-        const serviceID = 'service_7z31mt9'; // Seu Service ID do Outlook
-        const templateID = 'template_xdzh10w'; // Seu Template ID criado
+        // IDs do EmailJS
+        const serviceID = 'service_7z31mt9';
+        const templateID = 'template_xdzh10w';
 
+        // Envia o formulário usando EmailJS
         emailjs.sendForm(serviceID, templateID, this)
             .then(() => {
-                // 7. Requisito: Exibir mensagem de sucesso após envio
+                // Se deu certo
                 exibirResposta("✅ Sucesso! Mensagem enviada para o Outlook.", "msg-sucesso");
-                form.reset(); 
+                form.reset(); // Limpa o formulário
             }, (error) => {
+                // Se deu erro
                 exibirResposta("❌ Erro ao enviar. Tente novamente.", "msg-erro");
-                console.log("Falha:", error);
+                console.log("Falha:", error); // Mostra erro no console
             })
             .finally(() => {
+                // Sempre executa (sucesso ou erro)
                 btnSubmit.innerText = "Enviar Mensagem";
                 btnSubmit.disabled = false;
             });
     });
 
-    // Função de Manipulação do DOM para feedback ao usuário
+    // Função que mostra mensagem na tela
     function exibirResposta(texto, classe) {
-        feedbackMsg.innerText = texto;
-        feedbackMsg.className = classe; 
-        feedbackMsg.style.display = "block";
+        feedbackMsg.innerText = texto; // Define o texto
+        feedbackMsg.className = classe; // Define a classe (cor)
+        feedbackMsg.style.display = "block"; // Mostra na tela
     }
 </script>
 
